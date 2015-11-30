@@ -4,7 +4,7 @@
 
 import os
 import datetime
-import client
+from soracom import client
 
 
 class SpeedClass(object):
