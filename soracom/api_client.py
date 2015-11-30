@@ -116,6 +116,31 @@ class SoracomAPI(object):
     def delete_subscriber_tag(self, imsis, tag_name):
         return self.__operate_subscriber("DELETE", "tags/%s" % tag_name, imsis)
 
+    # SIMのプラン変更
+    def update_subscriber_speed_class(self, imsis, speed_class):
+        params = {"speedClass" : speed_class}
+        return self.__operate_subscriber("POST", "update_speed_class", imsis,
+                                         params)
+
+    # SIMの有効期限設定
+    def set_expiry_time(self, imsis, expiry_time):
+        params = {"expiryTime" : expiry_time}
+        return self.__operate_subscriber("POST", "set_expiry_time", imsis,
+                                         params)
+
+    # SIMの有効期限設定を解除
+    def unset_expiry_time(self, imsis):
+        return self.__operate_subscriber("POST", "unset_expiry_time", imsis)
+
+    # SIMの所属Groupを指定あるいは上書き変更
+    def set_group(self, imsi, group_id):
+        params = {"groupdId" : group_id}
+        return self.__operate_subscriber("POST", "set_group", imsis, params)
+
+    # SIMの所属Groupを指定を解除
+    def unset_group(self, imsi):
+        return self.__operate_subscriber("POST", "unset_group", imsis)
+
     # SIMグループの一覧を取得
     def list_groups(self, group_id=""):
         if not group_id:
