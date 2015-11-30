@@ -39,6 +39,7 @@ class SoracomAPI(object):
         self._client = client.SoracomClient()
         self._authInfo = self._client.auth(email, password)
 
+    # 特定Operator下のSubscriber一覧を取得
     def list_subscribers(self, limit=1024, filter={}):
         uri = "/subscribers"
         params = {"limit" : limit}
@@ -54,6 +55,51 @@ class SoracomAPI(object):
 
     def subscribers(self, limit=1024, filter={}):
         return self.list_subscribers(limit, filter)
+
+    # SIMの登録
+    def register_subscriber(self, imsi, registration_secret="", groupId=None, tags={})
+        if not imsi:
+            return {}
+
+        uri = "/subscribers/%s/register" % imsi
+        params = {"registrationSecret" : registration_secret,
+                  "tags"               : tags}
+        if groupId:
+            params["groupId"] = groupId
+
+        return self._client.post(uri, params)
+
+    def __operate_subscriber(self, operation, imsis):
+        if type(imsis) != list:
+            imsis = [imsis]
+
+        results = {}
+        for imsi in imsis:
+            uri = "/subscribers/%s/%s" % (imsi, operation)
+            res = self._client.post(uri)
+            results[imsi] = res
+
+        return res
+
+    # SIMの利用開始(再開)
+    def activate_subscriber(self, imsis):
+        return self.__operate_subscriber("activate", imsis)
+
+    # SIMの利用休止
+    def deactivate_subscriber(self, imsis):
+        return self.__operate_subscriber("deactivate", imsis)
+
+    # SIMの解約
+    def terminate_subscriber(self, imsis):
+        return self.__operate_subscriber("terminate", imsis)
+
+    # 指定されたSubscriberをTerminate可能に設定する
+    def enable_termination(self, imsis):
+        return self.__operate_subscriber("enable_terminate", imsis)
+
+    # 指定されたSubscriberをTerminate不可能に設定する
+    def disable_termination(self, imsis):
+        return self.__operate_subscriber("disable_terminate", imsis)
 
     # SIMグループの一覧を取得
     def list_groups(self, group_id=""):
