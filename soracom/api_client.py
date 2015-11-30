@@ -57,7 +57,7 @@ class SoracomAPI(object):
         return self.list_subscribers(limit, filter)
 
     # SIMの登録
-    def register_subscriber(self, imsi, registration_secret="", groupId=None, tags={})
+    def register_subscriber(self, imsi, registration_secret="", groupId=None, tags={}):
         if not imsi:
             return {}
 
