@@ -7,7 +7,7 @@ import urllib
 import json
 import requests
 
-class SoracomClient:
+class SoracomClient(object):
     """Soracom Client Class"""
     
     API_BASE_URL = "https://api.soracom.io/v1"
@@ -28,6 +28,7 @@ class SoracomClient:
             'X-Soracom-Api-Key': apiKey,
             'X-Soracom-Token': token
         }
+        return data
 
     def get(self, path, params={}):
         query_string = "&".join(["{0}={1}".format(y,z) for y, z in params.items()])
