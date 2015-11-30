@@ -69,37 +69,52 @@ class SoracomAPI(object):
 
         return self._client.post(uri, params)
 
-    def __operate_subscriber(self, operation, imsis):
+    def __operate_subscriber(self, method, operation, imsis, params={}):
         if type(imsis) != list:
             imsis = [imsis]
 
         results = {}
         for imsi in imsis:
             uri = "/subscribers/%s/%s" % (imsi, operation)
-            res = self._client.post(uri)
+
+            if method == "POST":
+                res = self._client.post(uri, params)
+            elif method == "PUT":
+                res = self._client.put(uri, params)
+            elif method == "DELETE":
+                res = self._client.delete(uri)
+
             results[imsi] = res
 
         return res
 
     # SIMの利用開始(再開)
     def activate_subscriber(self, imsis):
-        return self.__operate_subscriber("activate", imsis)
+        return self.__operate_subscriber("POST", "activate", imsis)
 
     # SIMの利用休止
     def deactivate_subscriber(self, imsis):
-        return self.__operate_subscriber("deactivate", imsis)
+        return self.__operate_subscriber("POST", "deactivate", imsis)
 
     # SIMの解約
     def terminate_subscriber(self, imsis):
-        return self.__operate_subscriber("terminate", imsis)
+        return self.__operate_subscriber("POST", "terminate", imsis)
 
     # 指定されたSubscriberをTerminate可能に設定する
     def enable_termination(self, imsis):
-        return self.__operate_subscriber("enable_terminate", imsis)
+        return self.__operate_subscriber("POST", "enable_terminate", imsis)
 
     # 指定されたSubscriberをTerminate不可能に設定する
     def disable_termination(self, imsis):
-        return self.__operate_subscriber("disable_terminate", imsis)
+        return self.__operate_subscriber("POST", "disable_terminate", imsis)
+
+    # タグの更新
+    def update_subscriber_tags(self, imsis, tags):
+        return self.__operate_subscriber("PUT", "tags", imsis, tags)
+
+    # 指定タグの削除
+    def delete_subscriber_tag(self, imsis, tag_name):
+        return self.__operate_subscriber("DELETE", "tags/%s" % tag_name, imsis)
 
     # SIMグループの一覧を取得
     def list_groups(self, group_id=""):
