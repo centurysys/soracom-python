@@ -69,7 +69,7 @@ class SoracomAPI(object):
 
         return self._client.post(uri, params)
 
-    def __operate_subscriber(self, method, operation, imsis, params={}):
+    def __operate_subscriber(self, method, operation, imsis, payload={}):
         if type(imsis) != list:
             imsis = [imsis]
 
@@ -78,9 +78,9 @@ class SoracomAPI(object):
             uri = "/subscribers/%s/%s" % (imsi, operation)
 
             if method == "POST":
-                res = self._client.post(uri, params)
+                res = self._client.post(uri, payload=payload)
             elif method == "PUT":
-                res = self._client.put(uri, params)
+                res = self._client.put(uri, payload=paylod)
             elif method == "DELETE":
                 res = self._client.delete(uri)
 
