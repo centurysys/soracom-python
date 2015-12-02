@@ -9,12 +9,12 @@ import requests
 
 class SoracomClient(object):
     """Soracom Client Class"""
-    
+
     API_BASE_URL = "https://api.soracom.io/v1"
-    
+
     def __init__(self):
         self.headers = {}
-        
+
     def auth(self, email=os.environ.get("SORACOM_EMAIL"), password=os.environ.get("SORACOM_PASSWORD")):
         data = {}
         headers = {'Content-Type': 'application/json'}
@@ -41,8 +41,9 @@ class SoracomClient(object):
     def post(self, path, params={}, payload={}):
         if len(params)>0:
             query_string = "&".join(["{0}={1}".format(y,z) for y, z in params.items()])
-            path = path + "?" + query_string 
-        headers = dict(self.headers.items() + {'Content-Type':'application/json'}.items())
+            path = path + "?" + query_string
+        headers = self.headers
+        headers.update({'Content-Type' : 'application/json'})
         res = requests.post(self.API_BASE_URL+path,headers=headers,data=json.dumps(payload)).text
         if len(res) > 0 :
             data = json.loads(res)
@@ -53,7 +54,8 @@ class SoracomClient(object):
         if len(params)>0:
             query_string = "&".join(["{0}={1}".format(y,z) for y, z in params.items()])
             path = path + "?" + query_string 
-        headers = dict(self.headers.items() + {'Content-Type':'application/json'}.items())
+        headers = self.headers
+        headers.update({'Content-Type' : 'application/json'})
         res = requests.put(self.API_BASE_URL+path,headers=headers,data=json.dumps(payload)).text
         if len(res) > 0 :
             data = json.loads(res)
